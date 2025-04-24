@@ -22,7 +22,7 @@ If you are looking for a specific function, class, etc., try using the search ba
 
 ## Operators
 
-## Statical analysis
+## Statical analysis tools
 
 ## Testing tools
 
