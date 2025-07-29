@@ -151,6 +151,16 @@ namespace cpp2py {
     using conv_t = py_converter<triqs::gfs::block_gf_view<M, T, nda::C_stride_layout, A>>;
     using c_type = triqs::gfs::block_gf<M, T, nda::C_layout, A>;
 
+    // ------------ tp_name ---------------
+
+#ifdef C2PY_INCLUDED
+    static std::string tp_name() {
+      std::ostringstream out;
+      out << "BlockGf[" << ::c2py::python_typename<M>() << ", "<< T::rank<< "]";
+      return out.str();
+    }
+#endif
+
     static PyObject *c2py(triqs::gfs::block_gf_view<M, T, nda::C_stride_layout, A> g) { return conv_t::c2py(g); }
     static bool is_convertible(PyObject *ob, bool raise_exception) { return conv_t::is_convertible(ob, raise_exception); }
     static c_type py2c(PyObject *ob) { return c_type{conv_t::py2c(ob)}; }
