@@ -27,5 +27,6 @@
 
 #ifdef C2PY_INCLUDED
 #include <c2py/c2py.hpp>
-template <> constexpr bool c2py::is_wrapped<triqs::stat::histogram> = true;
+template <> constexpr bool c2py::is_wrapped<triqs::stat::histogram>     = true;
+template <> constexpr const char *c2py::tp_name<triqs::stat::histogram> = "Histogram";
 #endif

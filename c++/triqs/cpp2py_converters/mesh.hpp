@@ -28,6 +28,7 @@ namespace cpp2py {
   // -----------------------------------
 
   template <> struct py_converter<triqs::mesh::all_t> {
+    static constexpr const char *tp_name = "all";
 
     static PyObject *c2py(triqs::mesh::all_t m) {
       pyref all = pyref::get_class("builtins", "all", true);
@@ -48,6 +49,8 @@ namespace cpp2py {
   // -----------------------------------
 
   template <> struct py_converter<triqs::mesh::statistic_enum> {
+    static constexpr const char *tp_name = "\"Fermion\" | \"Boson\"";
+
     static PyObject *c2py(triqs::mesh::statistic_enum x) {
       if (x == triqs::mesh::Fermion) return PyUnicode_FromString("Fermion");
       return PyUnicode_FromString("Boson"); // last case separate to avoid no return warning of compiler
@@ -78,6 +81,7 @@ namespace cpp2py {
   // -----------------------------------
 
   template <> struct py_converter<triqs::mesh::matsubara_freq> {
+    static constexpr const char *tp_name = "MatsubaraFreq";
 
     using c_type = triqs::mesh::matsubara_freq;
 
@@ -123,8 +127,9 @@ namespace cpp2py {
   // -----------------------------------
 
   template <> struct py_converter<triqs::lattice::bravais_lattice::point_t> {
-
     using c_type = triqs::lattice::bravais_lattice::point_t;
+
+    static constexpr const char *tp_name = "LatticePoint";
 
     static PyObject *c2py(c_type const &x) {
       pyref cls = pyref::get_class("triqs.lattice", "LatticePoint", true);
@@ -180,6 +185,17 @@ namespace cpp2py {
     using c_type      = triqs::mesh::prod<Ms...>;
     using mtuple_conv = py_converter<typename c_type::m_tuple_t>; // the tuple of meshes
 
+#ifdef C2PY_INCLUDED
+    static std::string tp_name() {
+      std::ostringstream out;
+      std::string sep;
+      out << "MeshProduct[";
+      ((out << sep << ::c2py::python_typename<Ms>(), sep = ", "), ...);
+      out << "]";
+      return out.str();
+    }
+#endif
+
     static PyObject *c2py(c_type m) {
       pyref cls = pyref::get_class("triqs.gf", "MeshProduct", true);
       if (cls.is_null()) return NULL;
@@ -214,6 +230,8 @@ namespace cpp2py {
   template <triqs::mesh::MeshPoint MP> struct py_converter<MP> {
 
     using c_type = MP;
+
+    static constexpr const char *tp_name = "MeshPoint";
 
     static PyObject *c2py(c_type const &p) {
 

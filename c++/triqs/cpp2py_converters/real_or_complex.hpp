@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <cpp2py/cpp2py.hpp>
+
 namespace cpp2py {
 
   template <> struct py_converter<triqs::utility::real_or_complex> {
@@ -26,6 +28,16 @@ namespace cpp2py {
     using c_t      = triqs::utility::real_or_complex;
     using conv_d_t = py_converter<double>;
     using conv_c_t = py_converter<std::complex<double>>;
+
+    // ------------ tp_name ---------------
+
+#ifdef C2PY_INCLUDED
+    static std::string tp_name() {
+      std::ostringstream out;
+      out << ::c2py::python_typename<double>() << " | " << ::c2py::python_typename<std::complex<double>>();
+      return out.str();
+    }
+#endif
 
     static PyObject *c2py(c_t const &x) {
       if (x.is_real()) return conv_d_t::c2py(double(x));
