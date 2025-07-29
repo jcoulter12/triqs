@@ -52,6 +52,12 @@ namespace cpp2py {
     using conv_t = py_converter<triqs::gfs::gf_view<M, T>>;
     using c_type = triqs::gfs::gf<M, T>;
 
+    // ------------ tp_name ---------------
+
+#ifdef C2PY_INCLUDED
+    static std::string tp_name() { return conv_t::tp_name(); }
+#endif
+
     static PyObject *c2py(triqs::gfs::gf_view<M, T> g) { return conv_t::c2py(g); }
     static bool is_convertible(PyObject *ob, bool raise_exception) { return conv_t::is_convertible(ob, raise_exception); }
     static c_type py2c(PyObject *ob) { return c_type{conv_t::py2c(ob)}; }
@@ -64,6 +70,12 @@ namespace cpp2py {
   template <typename M, typename T> struct py_converter<triqs::gfs::gf_const_view<M, T>> {
     using conv_t = py_converter<triqs::gfs::gf_view<M, T>>;
     using c_type = triqs::gfs::gf_const_view<M, T>;
+
+    // ------------ tp_name ---------------
+
+#ifdef C2PY_INCLUDED
+    static std::string tp_name() { return conv_t::tp_name(); }
+#endif
 
     static PyObject *c2py(c_type g) = delete; // You can not convert a C++ const_view to a Python Gf ! Violates const correctness.
     static bool is_convertible(PyObject *ob, bool raise_exception) { return conv_t::is_convertible(ob, raise_exception); }
@@ -80,6 +92,16 @@ namespace cpp2py {
     using c_type = triqs::gfs::gf_view<M, T>;
     using mesh_t = typename c_type::mesh_t;
     using data_t = typename c_type::data_t;
+
+    // ------------ tp_name ---------------
+
+#ifdef C2PY_INCLUDED
+    static std::string tp_name() {
+      std::ostringstream out;
+      out << "Gf[" << ::c2py::python_typename<M>() << ", " << T::rank << "]";
+      return out.str();
+    }
+#endif
 
     static PyObject *c2py(c_type g) {
 
@@ -154,11 +176,7 @@ namespace cpp2py {
     // ------------ tp_name ---------------
 
 #ifdef C2PY_INCLUDED
-    static std::string tp_name() {
-      std::ostringstream out;
-      out << "BlockGf[" << ::c2py::python_typename<M>() << ", "<< T::rank<< "]";
-      return out.str();
-    }
+    static std::string tp_name() { return conv_t::tp_name(); }
 #endif
 
     static PyObject *c2py(triqs::gfs::block_gf_view<M, T, nda::C_stride_layout, A> g) { return conv_t::c2py(g); }
@@ -174,6 +192,12 @@ namespace cpp2py {
     using conv_t = py_converter<triqs::gfs::block_gf_view<M, T, nda::C_stride_layout, A>>;
     using c_type = triqs::gfs::block_gf_const_view<M, T, nda::C_stride_layout, A>;
 
+    // ------------ tp_name ---------------
+
+#ifdef C2PY_INCLUDED
+    static std::string tp_name() { return conv_t::tp_name(); }
+#endif
+
     static PyObject *c2py(c_type g) = delete; // You can not convert a C++ const_view to a Python Gf ! Violates const correctness.
     static bool is_convertible(PyObject *ob, bool raise_exception) { return conv_t::is_convertible(ob, raise_exception); }
     static c_type py2c(PyObject *ob) { return conv_t::py2c(ob); }
@@ -188,6 +212,16 @@ namespace cpp2py {
     using gf_type      = triqs::gfs::gf<M, T>;
     using gf_view_type = triqs::gfs::gf_view<M, T>;
     using c_type       = triqs::gfs::block_gf_view<M, T>;
+
+    // ------------ tp_name ---------------
+
+#ifdef C2PY_INCLUDED
+    static std::string tp_name() {
+      std::ostringstream out;
+      out << "BlockGf[" << ::c2py::python_typename<M>() << ", " << T::rank << "]";
+      return out.str();
+    }
+#endif
 
     // ----------------------------------------------
 
@@ -262,6 +296,16 @@ namespace cpp2py {
     using gf_type      = triqs::gfs::gf<M, T>;
     using gf_view_type = triqs::gfs::gf_view<M, T>;
     using c_type       = triqs::gfs::block2_gf_view<M, T>;
+
+    // ------------ tp_name ---------------
+
+#ifdef C2PY_INCLUDED
+    static std::string tp_name() {
+      std::ostringstream out;
+      out << "Block2Gf[" << ::c2py::python_typename<M>() << ", " << T::rank << "]";
+      return out.str();
+    }
+#endif
 
     // ----------------------------------------------
 
