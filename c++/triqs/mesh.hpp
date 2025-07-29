@@ -62,6 +62,10 @@
 
 #ifdef C2PY_INCLUDED
 #include "./cpp2py_converters/mesh.hpp"
+template <> constexpr bool c2py::is_wrapped<triqs::mesh::imfreq>     = true;
+template <> constexpr bool c2py::is_wrapped<triqs::mesh::dlr_imfreq> = true;
+template <> constexpr const char * c2py::tp_name<triqs::mesh::imfreq> = "triqs.Imfreq";
+template <> constexpr const char * c2py::tp_name<triqs::mesh::dlr_imfreq> = "triqs.DlrImfreq";
 #endif
 
 namespace triqs::mesh {
